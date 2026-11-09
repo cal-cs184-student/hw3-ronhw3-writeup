@@ -18,6 +18,11 @@
 			table.data th { background: #f0f0f0; }
 			code { background: #f4f4f4; padding: 0 3px; }
 			pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+			td.label { white-space: nowrap; vertical-align: middle !important; }
+			@media print {
+				figure, tr, table.data, p { break-inside: avoid; page-break-inside: avoid; }
+				h2, h3 { break-after: avoid; page-break-after: avoid; }
+			}
 		</style>
 	</head>
 	<body>
@@ -55,7 +60,7 @@
 		</p>
 		<p>
 		<code>Camera::generate_ray(x, y)</code> maps the normalized image point onto a virtual sensor on the \(z=-1\) plane of camera space. The sensor spans \([-\tan\frac{hFov}{2}, \tan\frac{hFov}{2}]\) horizontally and \([-\tan\frac{vFov}{2}, \tan\frac{vFov}{2}]\) vertically, so the point is
-		\[ \mathbf{d}_{cam} = \left((2x-1)\tan\tfrac{hFov}{2},\; (2y-1)\tan\tfrac{vFov}{2},\; -1\right). \]
+		\[ \mathbf{d}_{cam} = \left((2x-1)\tan\frac{hFov}{2},\; (2y-1)\tan\frac{vFov}{2},\; -1\right). \]
 		The camera sits at the origin of camera space, so the ray direction is just this point. I rotate it into world space with the camera-to-world matrix <code>c2w</code>, normalize it, and use the camera position <code>pos</code> as the origin. The ray's <code>min_t</code> and <code>max_t</code> are set to the near and far clipping distances so anything outside the view frustum's depth range is ignored.
 		</p>
 
@@ -202,7 +207,7 @@
 			<li>If <code>depth == 1</code>, the path has used its last bounce, so stop.</li>
 			<li>Russian roulette: the first indirect bounce from a camera hit is always traced (as the spec requires when <code>max_ray_depth &gt; 1</code>). After that, the path continues with probability \(p_{rr} = 0.65\), i.e. a termination probability of 0.35.</li>
 			<li>Sample \(\omega_i\) from the BSDF, transform it to world space, and cast a ray with <code>min_t = EPS_F</code> and <code>depth - 1</code>. If it misses the scene, nothing more is added.</li>
-			<li>Otherwise recurse on the new hit, and add \(\dfrac{f \cdot L_{rec} \cdot \cos\theta_i}{p(\omega_i)\, p_{rr}}\). Dividing by the continuation probability is what keeps Russian roulette unbiased: paths that survive are weighted up to make up for the ones that were cut off.</li>
+			<li>Otherwise recurse on the new hit, and add \(\frac{f \cdot L_{rec} \cdot \cos\theta_i}{p(\omega_i)\, p_{rr}}\). Dividing by the continuation probability is what keeps Russian roulette unbiased: paths that survive are weighted up to make up for the ones that were cut off.</li>
 		</ol>
 		<p>
 		When <code>isAccumBounces</code> is false (<code>-o 0</code>), only light that has bounced exactly <code>max_ray_depth</code> times is kept: zero-bounce emission only when <code>max_ray_depth = 0</code>, and otherwise only the direct lighting term at the last vertex (<code>depth == 1</code>). The intermediate vertices still trace the path but contribute nothing themselves.
@@ -261,32 +266,32 @@
 		<table class="grid">
 			<tr><th></th><th>Only the m-th bounce</th><th>Accumulated bounces 0..m</th></tr>
 			<tr>
-				<td style="vertical-align:middle"><code>-m 0</code></td>
+				<td class="label"><code>-m 0</code></td>
 				<td><img src="assets/p4/p4_bunny_bounce_m0.png" width="320"/></td>
 				<td><img src="assets/p4/p4_bunny_accum_m0.png" width="320"/></td>
 			</tr>
 			<tr>
-				<td style="vertical-align:middle"><code>-m 1</code></td>
+				<td class="label"><code>-m 1</code></td>
 				<td><img src="assets/p4/p4_bunny_bounce_m1.png" width="320"/></td>
 				<td><img src="assets/p4/p4_bunny_accum_m1.png" width="320"/></td>
 			</tr>
 			<tr>
-				<td style="vertical-align:middle"><code>-m 2</code></td>
+				<td class="label"><code>-m 2</code></td>
 				<td><img src="assets/p4/p4_bunny_bounce_m2.png" width="320"/></td>
 				<td><img src="assets/p4/p4_bunny_accum_m2.png" width="320"/></td>
 			</tr>
 			<tr>
-				<td style="vertical-align:middle"><code>-m 3</code></td>
+				<td class="label"><code>-m 3</code></td>
 				<td><img src="assets/p4/p4_bunny_bounce_m3.png" width="320"/></td>
 				<td><img src="assets/p4/p4_bunny_accum_m3.png" width="320"/></td>
 			</tr>
 			<tr>
-				<td style="vertical-align:middle"><code>-m 4</code></td>
+				<td class="label"><code>-m 4</code></td>
 				<td><img src="assets/p4/p4_bunny_bounce_m4.png" width="320"/></td>
 				<td><img src="assets/p4/p4_bunny_accum_m4.png" width="320"/></td>
 			</tr>
 			<tr>
-				<td style="vertical-align:middle"><code>-m 5</code></td>
+				<td class="label"><code>-m 5</code></td>
 				<td><img src="assets/p4/p4_bunny_bounce_m5.png" width="320"/></td>
 				<td><img src="assets/p4/p4_bunny_accum_m5.png" width="320"/></td>
 			</tr>
